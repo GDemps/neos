@@ -21,16 +21,6 @@ end
   def self.find_neos_by_date(date)
     asteroids_list_data = asteroids_list_data(date)
     parsed_asteroids_data = parsed_asteroids_data(asteroids_list_data, date)
-
-    # total_number_of_astroids = parsed_asteroids_data.count
-    # formatted_asteroid_data = parsed_asteroids_data.map do |astroid|
-    #   {
-    #     name: astroid[:name],
-    #     diameter: "#{astroid[:estimated_diameter][:feet][:estimated_diameter_max].to_i} ft",
-    #     miss_distance: "#{astroid[:close_approach_data][0][:miss_distance][:miles].to_i} miles"
-    #   }
-    # end
-
     formatted_asteroid_data = formatted_asteroid_data(parsed_asteroids_data)
     self.new(formatted_asteroid_data, parsed_asteroids_data)
   end
