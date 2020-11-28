@@ -29,4 +29,12 @@ class NearEarthObjectsTest < Minitest::Test
     parsed_asteroids_data= NearEarthObjects.parsed_asteroids_data(asteroids_list_data, '2019-03-30')
     assert_equal 537, results.largest_astroid(parsed_asteroids_data)
   end
+
+  def test_formatted_asteroid_date
+   asteroids_list_data = NearEarthObjects.asteroids_list_data('2019-03-30')
+   parsed_asteroids_data= NearEarthObjects.parsed_asteroids_data(asteroids_list_data, '2019-03-30')
+   results = NearEarthObjects.formatted_asteroid_data(parsed_asteroids_data)
+   assert_equal Array, results.class
+   assert_equal "147 ft", results[1][:diameter]
+  end
 end
