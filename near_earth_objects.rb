@@ -7,16 +7,26 @@ Figaro.application = Figaro::Application.new(environment: 'production', path: Fi
 Figaro.load
 
 class NearEarthObjects
+  attr_reader :details
+
+def initialize(formatted_asteroid_data, parsed_asteroids_data)
+  @details =
+    {
+      astroid_list: formatted_asteroid_data,
+      biggest_astroid: largest_astroid(parsed_asteroids_data),
+      total_number_of_astroids: parsed_asteroids_data.count
+    }
+end
+
   def self.find_neos_by_date(date)
     asteroids_list_data = asteroids_list_data(date)
-
     parsed_asteroids_data = parsed_asteroids_data(asteroids_list_data, date)
 
-    largest_astroid_diameter = parsed_asteroids_data.map do |astroid|
-      astroid[:estimated_diameter][:feet][:estimated_diameter_max].to_i
-    end.max { |a,b| a<=> b}
+    # largest_astroid_diameter = parsed_asteroids_data.map do |astroid|
+    #   astroid[:estimated_diameter][:feet][:estimated_diameter_max].to_i
+    # end.max { |a,b| a<=> b}
 
-    total_number_of_astroids = parsed_asteroids_data.count
+    # total_number_of_astroids = parsed_asteroids_data.count
     formatted_asteroid_data = parsed_asteroids_data.map do |astroid|
       {
         name: astroid[:name],
@@ -25,15 +35,22 @@ class NearEarthObjects
       }
     end
 
-    {
-      astroid_list: formatted_asteroid_data,
-      biggest_astroid: largest_astroid_diameter,
-      total_number_of_astroids: total_number_of_astroids
-    }
+    # {
+    #   astroid_list: formatted_asteroid_data,
+    #   biggest_astroid: largest_astroid_diameter,
+    #   total_number_of_astroids: total_number_of_astroids
+    # }
+    self.new(formatted_asteroid_data, parsed_asteroids_data)
   end
 
   def self.parsed_asteroids_data(asteroids_list_data, date)
     JSON.parse(asteroids_list_data.body, symbolize_names: true)[:near_earth_objects][:"#{date}"]
+  end
+
+  def largest_astroid(parsed_asteroids_data)
+    parsed_asteroids_data.map do |astroid|
+      astroid[:estimated_diameter][:feet][:estimated_diameter_max].to_i
+    end.max { |a,b| a <=> b}
   end
 
   private
